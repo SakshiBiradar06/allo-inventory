@@ -11,7 +11,7 @@ export async function GET() {
     })
 
     for (const r of expiredReservations) {
-      await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx: any) => {
         await tx.stockLevel.update({
           where: {
             productId_warehouseId: {
