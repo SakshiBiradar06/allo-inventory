@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     const reservation = await prisma.$transaction(async (tx: any) => {
       // Lock the row - prevents race conditions!
-      const stocks = await tx.$queryRawUnsafe<any[]>(
+      const stocks = await tx.$queryRawUnsafe(
         `SELECT * FROM "StockLevel" WHERE "productId" = $1 AND "warehouseId" = $2 FOR UPDATE`,
         productId,
         warehouseId
