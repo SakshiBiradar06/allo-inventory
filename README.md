@@ -32,8 +32,7 @@ When a customer clicks "Reserve", the item is held for 10 minutes while they com
 - Payment succeeds → reservation confirmed, stock permanently decremented
 - Payment fails / timer expires → reservation released, stock returned
 
-## Live URL
-https://allo-inventory.vercel.app
+
 
 ## Tech Stack
 - Next.js 16 (App Router) + TypeScript
