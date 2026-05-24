@@ -18,7 +18,7 @@
 //       return NextResponse.json({ error: 'Reservation is not pending' }, { status: 400 })
 //     }
 
-//     await prisma.$transaction(async (tx) => {
+//     await prisma.$transaction(async (tx: any) => {
 //       await tx.stockLevel.update({
 //         where: {
 //           productId_warehouseId: {
@@ -62,7 +62,7 @@ export async function POST(
       return NextResponse.json({ error: 'Reservation is not pending' }, { status: 400 })
     }
 
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       await tx.stockLevel.update({
         where: {
           productId_warehouseId: {
