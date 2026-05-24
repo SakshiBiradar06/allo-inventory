@@ -1,38 +1,17 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-
-
-
 # Allo Inventory – Take-Home Exercise
 
 A Next.js inventory reservation system for multi-warehouse retail brands.
+
+## Live URL
+https://allo-inventory-git-main-sakshis-projects-09da2abb.vercel.app
+
+## GitHub
+https://github.com/SakshiBiradar06/allo-inventory
 
 ## What it does
 When a customer clicks "Reserve", the item is held for 10 minutes while they complete payment.
 - Payment succeeds → reservation confirmed, stock permanently decremented
 - Payment fails / timer expires → reservation released, stock returned
-
-
 
 ## Tech Stack
 - Next.js 16 (App Router) + TypeScript
@@ -43,26 +22,38 @@ When a customer clicks "Reserve", the item is held for 10 minutes while they com
 ## How to run locally
 
 ### 1. Clone the repo
+```bash
 git clone https://github.com/SakshiBiradar06/allo-inventory.git
 cd allo-inventory
+```
 
 ### 2. Install dependencies
+```bash
 npm install
+```
 
 ### 3. Set up environment variables
 Create a `.env` file:
-DATABASE_URL="your-supabase-url"
-DIRECT_URL="your-supabase-direct-url"
+
+# Connect to Supabase via connection pooling
+DATABASE_URL="postgresql://postgres.cofumlzikhbfhxbjknvk:Allo1234567890Sakshi@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres"
+
+DIRECT_URL="postgresql://postgres.cofumlzikhbfhxbjknvk:Allo1234567890Sakshi@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres"
 
 ### 4. Run migrations
+```bash
 npx prisma migrate dev
+```
 
 ### 5. Seed the database
+```bash
 npx ts-node prisma/seed.ts
+```
 
 ### 6. Start the dev server
+```bash
 npm run dev
-
+```
 Open http://localhost:3000
 
 ## How expiry works in production
@@ -70,13 +61,6 @@ A Vercel Cron Job runs every minute hitting `/api/cron/expire`.
 It finds all reservations where `status = pending` and `expiresAt < now`,
 releases the stock back by decrementing the reserved count,
 and marks those reservations as `released`.
-
-Cron config in `vercel.json`:
-```json
-{
-  "crons": [{ "path": "/api/cron/expire", "schedule": "* * * * *" }]
-}
-```
 
 ## How concurrency is handled
 The reservation endpoint uses a Postgres `SELECT FOR UPDATE` inside a transaction.
@@ -95,17 +79,12 @@ only one will succeed — the other gets a 409 Not Enough Stock response.
 
 ## Trade-offs & things I'd do differently
 
-1. **Redis locking** – I used Postgres SELECT FOR UPDATE for concurrency.
-   With more time I'd add Redis distributed locks for better performance at scale.
+1. **Redis locking** – Used Postgres SELECT FOR UPDATE for concurrency. With more time I'd add Redis distributed locks for better performance at scale.
 
-2. **Idempotency** – Not implemented. Would use Redis to store request keys
-   and return cached responses for duplicate requests.
+2. **Idempotency** – Not implemented. Would use Redis to store request keys and return cached responses for duplicate requests.
 
-3. **Auth** – No user authentication. In production each reservation
-   would be tied to a user account.
+3. **Auth** – No user authentication. In production each reservation would be tied to a user account.
 
-4. **Tests** – No automated tests. Would add Jest unit tests for the
-   reservation logic and concurrency scenarios.
+4. **Tests** – No automated tests. Would add Jest unit tests for the reservation logic and concurrency scenarios.
 
-5. **Real payment integration** – Confirm button simulates payment.
-   Would integrate Razorpay or Stripe in production.
+5. **Real payment integration** – Confirm button simulates payment. Would integrate Razorpay or Stripe in production.
